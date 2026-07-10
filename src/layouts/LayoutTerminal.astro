@@ -1,0 +1,63 @@
+---
+import '../styles/global.css';
+import { SITE } from '../config';
+
+interface Props {
+  title?: string;
+}
+
+const { title = `Terminal — ${SITE.name}` } = Astro.props;
+---
+
+<!doctype html>
+<html lang={SITE.lang}>
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
+    <title>{title}</title>
+    <meta name="robots" content="noindex" />
+  </head>
+  <body
+    id="terminal-body"
+    class="crt-screen crt-flicker bg-rp-base text-rp-text font-mono-term min-h-screen overflow-hidden"
+  >
+    <div class="crt-sweep" aria-hidden="true"></div>
+
+    <!-- Botão de acessibilidade: desliga scanlines/flicker para usuários fotossensíveis -->
+    <button
+      id="crt-toggle"
+      type="button"
+      aria-pressed="false"
+      class="fixed bottom-3 right-3 z-[1002] rounded border border-rp-overlay bg-rp-surface/90 px-3 py-1.5 text-xs text-rp-subtle backdrop-blur-sm transition-colors hover:text-rp-kali-green-bright hover:border-rp-kali-green"
+    >
+      Desabilitar Flicker/CRT
+    </button>
+
+    <slot />
+
+    <script>
+      const KEY = 'khimira-crt-disabled';
+      const btn = document.getElementById('crt-toggle');
+      const body = document.getElementById('terminal-body');
+
+      function applyState(disabled: boolean) {
+        body?.classList.toggle('crt-disabled', disabled);
+        btn?.setAttribute('aria-pressed', String(disabled));
+        if (btn) {
+          btn.textContent = disabled ? 'Ativar Flicker/CRT' : 'Desabilitar Flicker/CRT';
+        }
+      }
+
+      const stored = localStorage.getItem(KEY) === 'true';
+      const prefersReduced = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+      applyState(stored || prefersReduced);
+
+      btn?.addEventListener('click', () => {
+        const next = !body?.classList.contains('crt-disabled');
+        localStorage.setItem(KEY, String(next));
+        applyState(next);
+      });
+    </script>
+  </body>
+</html>

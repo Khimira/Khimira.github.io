@@ -1,0 +1,175 @@
+---
+import LayoutRH from '../layouts/LayoutRH.astro';
+import CardProjeto from '../components/CardProjeto.astro';
+import SwitchTerminal from '../components/SwitchTerminal.astro';
+import { SITE, ABOUT, NAV_LINKS } from '../config';
+import { getCollection } from 'astro:content';
+
+const allProjects = await getCollection('projects');
+const projects = allProjects
+  .sort((a, b) => b.data.date.valueOf() - a.data.date.valueOf());
+---
+
+<LayoutRH>
+  <header class="sticky top-0 z-50 border-b border-rh-border bg-rh-bg/90 backdrop-blur">
+    <div class="mx-auto flex max-w-5xl items-center justify-between px-4 py-4 md:px-8">
+      <a href="#top" class="font-mono-code text-sm font-semibold text-rh-text">
+        {SITE.name} <span class="text-rh-muted">/ {SITE.role}</span>
+      </a>
+      <nav class="hidden items-center gap-6 md:flex">
+        {NAV_LINKS.map((link) => (
+          <a href={link.href} class="text-sm text-rh-muted transition-colors hover:text-rh-accent">
+            {link.label}
+          </a>
+        ))}
+      </nav>
+      <SwitchTerminal targetHref="terminal" />
+    </div>
+  </header>
+
+  <main id="top">
+    <!-- HERO -->
+    <section class="mx-auto max-w-5xl px-4 py-16 md:px-8 md:py-24">
+      <p class="font-mono-code text-sm uppercase tracking-widest text-rh-accent">{SITE.role}</p>
+      <h1 class="mt-3 text-3xl font-bold leading-tight text-rh-text md:text-5xl">
+        {SITE.name}
+      </h1>
+      <p class="mt-2 text-lg text-rh-muted md:text-xl">{SITE.tagline}</p>
+      <p class="mt-6 max-w-2xl leading-relaxed text-rh-muted">{SITE.description}</p>
+      <div class="mt-8 flex flex-wrap gap-3">
+        <a
+          href={`mailto:${SITE.email}`}
+          class="rounded border border-rh-text bg-rh-text px-4 py-2 text-sm font-medium text-rh-bg transition-colors hover:bg-rh-accent hover:border-rh-accent"
+        >
+          Entrar em contato
+        </a>
+        <a
+          href={SITE.github}
+          target="_blank"
+          rel="noopener noreferrer"
+          class="rounded border border-rh-border px-4 py-2 text-sm font-medium text-rh-text transition-colors hover:border-rh-accent hover:text-rh-accent"
+        >
+          GitHub
+        </a>
+        <a
+          href={SITE.linkedin}
+          target="_blank"
+          rel="noopener noreferrer"
+          class="rounded border border-rh-border px-4 py-2 text-sm font-medium text-rh-text transition-colors hover:border-rh-accent hover:text-rh-accent"
+        >
+          LinkedIn
+        </a>
+      </div>
+    </section>
+
+    <!-- SOBRE -->
+    <section id="sobre" class="border-t border-rh-border bg-rh-surface">
+      <div class="mx-auto max-w-5xl px-4 py-16 md:px-8">
+        <h2 class="text-2xl font-bold text-rh-text">Sobre</h2>
+        <div class="mt-6 grid gap-8 md:grid-cols-2">
+          <div>
+            <h3 class="font-mono-code text-sm uppercase tracking-wide text-rh-accent">Formação</h3>
+            <ul class="mt-3 space-y-3">
+              {ABOUT.education.map((edu) => (
+                <li>
+                  <p class="font-medium text-rh-text">{edu.institution}</p>
+                  <p class="text-sm text-rh-muted">{edu.degree} — {edu.period} ({edu.status})</p>
+                </li>
+              ))}
+            </ul>
+
+            <h3 class="mt-8 font-mono-code text-sm uppercase tracking-wide text-rh-accent">Idiomas</h3>
+            <ul class="mt-3 flex gap-6">
+              {ABOUT.languages.map((lang) => (
+                <li class="text-sm text-rh-muted"><span class="font-medium text-rh-text">{lang.name}</span> — {lang.level}</li>
+              ))}
+            </ul>
+          </div>
+
+          <div>
+            <h3 class="font-mono-code text-sm uppercase tracking-wide text-rh-accent">Focos de estudo</h3>
+            <div class="mt-3 space-y-4">
+              {ABOUT.focusAreas.map((focus) => (
+                <div>
+                  <p class="font-medium text-rh-text">{focus.area}</p>
+                  <p class="text-sm text-rh-muted">{focus.items.join(' · ')}</p>
+                </div>
+              ))}
+            </div>
+          </div>
+        </div>
+
+        <h3 class="mt-10 font-mono-code text-sm uppercase tracking-wide text-rh-accent">Habilidades</h3>
+        <div class="mt-3 flex flex-wrap gap-2">
+          {ABOUT.skills.map((skill) => (
+            <span class="rounded border border-rh-border bg-rh-bg px-2.5 py-1 font-mono-code text-xs text-rh-muted">
+              {skill}
+            </span>
+          ))}
+        </div>
+      </div>
+    </section>
+
+    <!-- EXPERIÊNCIA -->
+    <section id="experiencia" class="mx-auto max-w-5xl px-4 py-16 md:px-8">
+      <h2 class="text-2xl font-bold text-rh-text">Experiência prática</h2>
+      <div class="mt-6 space-y-8">
+        {ABOUT.experience.map((exp) => (
+          <div class="border-l-2 border-rh-accent pl-5">
+            <h3 class="font-semibold text-rh-text">{exp.title}</h3>
+            <p class="text-sm text-rh-muted">{exp.subtitle}</p>
+            <ul class="mt-3 list-disc space-y-1.5 pl-4 text-sm leading-relaxed text-rh-muted">
+              {exp.bullets.map((bullet) => <li>{bullet}</li>)}
+            </ul>
+          </div>
+        ))}
+      </div>
+    </section>
+
+    <!-- PROJETOS -->
+    <section id="projetos" class="border-t border-rh-border bg-rh-surface">
+      <div class="mx-auto max-w-5xl px-4 py-16 md:px-8">
+        <div class="flex items-baseline justify-between">
+          <h2 class="text-2xl font-bold text-rh-text">Projetos</h2>
+        </div>
+        <div class="mt-6 grid gap-5 md:grid-cols-2 lg:grid-cols-3">
+          {projects.map((project) => (
+            <CardProjeto
+              actionTitle={project.data.actionTitle}
+              summary={project.data.summary}
+              protocol={project.data.protocol}
+              difficulty={project.data.difficulty}
+              runtime={project.data.runtime}
+              readTime={project.data.readTime}
+              href={`/projects/${project.id}/`}
+            />
+          ))}
+        </div>
+      </div>
+    </section>
+
+    <!-- CONTATO -->
+    <section id="contato" class="mx-auto max-w-5xl px-4 py-16 md:px-8">
+      <h2 class="text-2xl font-bold text-rh-text">Contato</h2>
+      <p class="mt-3 max-w-xl text-rh-muted">
+        Aberto a oportunidades em infraestrutura, redes, cibersegurança e automação.
+        Chame nos canais abaixo.
+      </p>
+      <div class="mt-6 flex flex-col gap-2 font-mono-code text-sm text-rh-text">
+        <a href={`mailto:${SITE.email}`} class="hover:text-rh-accent">{SITE.email}</a>
+        <span class="text-rh-muted">{SITE.location}</span>
+      </div>
+    </section>
+  </main>
+
+  <footer class="border-t border-rh-border py-8 text-center text-xs text-rh-muted">
+    <p>© {new Date().getFullYear()} {SITE.name}. Construído com Astro.js — 0kb JS por padrão.</p>
+    <button
+      id="footer-terminal-hint"
+      type="button"
+      class="mt-2 font-mono-code text-rh-muted underline decoration-dotted hover:text-rh-accent"
+    >
+      psst, tem um terminal escondido no header ↑
+    </button>
+  </footer>
+</LayoutRH>

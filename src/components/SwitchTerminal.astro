@@ -1,0 +1,53 @@
+---
+interface Props {
+  targetHref?: string;
+}
+const { targetHref = 'terminal' } = Astro.props;
+---
+
+<button
+  id="switch-terminal-btn"
+  type="button"
+  data-target={targetHref}
+  class="group inline-flex items-center gap-2 rounded border border-rh-text/20 bg-rh-text px-4 py-2 font-mono-code text-xs uppercase tracking-widest text-rh-bg transition-colors hover:bg-rh-accent"
+>
+  <span class="inline-block h-2 w-2 rounded-full bg-rp-kali-green-bright group-hover:animate-pulse"></span>
+  [ Ativar Terminal ]
+</button>
+
+<!-- Overlay de transição: "desmagnetização de tubo CRT" -->
+<div
+  id="crt-transition-overlay"
+  class="pointer-events-none fixed inset-0 z-[2000] hidden bg-black"
+  aria-hidden="true"
+>
+  <div id="crt-transition-line" class="absolute left-0 top-1/2 h-[2px] w-full -translate-y-1/2 bg-rp-kali-green-bright"></div>
+</div>
+
+<script>
+  const btn = document.getElementById('switch-terminal-btn');
+  const overlay = document.getElementById('crt-transition-overlay');
+  const line = document.getElementById('crt-transition-line');
+
+  btn?.addEventListener('click', () => {
+    const target = btn.getAttribute('data-target') || 'terminal';
+    const base = document.querySelector('base')?.getAttribute('href') ?? '/';
+
+    overlay?.classList.remove('hidden');
+    document.body.style.opacity = '0';
+    document.body.style.transition = 'opacity 220ms ease-out';
+
+    // Linha fina que se expande preenchendo a tela (efeito de tubo CRT ligando)
+    requestAnimationFrame(() => {
+      if (line) {
+        line.style.transition = 'height 380ms ease-in 220ms';
+        line.style.height = '100%';
+      }
+    });
+
+    setTimeout(() => {
+      const url = new URL(target, window.location.origin + base);
+      window.location.href = url.pathname;
+    }, 650);
+  });
+</script>

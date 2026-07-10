@@ -1,0 +1,36 @@
+---
+import LayoutTerminal from '../layouts/LayoutTerminal.astro';
+import Terminal from '../components/TerminalIsland/Terminal.jsx';
+import { getCollection } from 'astro:content';
+
+const projectEntries = await getCollection('projects');
+const projects = projectEntries
+  .sort((a, b) => b.data.date.valueOf() - a.data.date.valueOf())
+  .map((p) => ({
+    slug: p.id,
+    actionTitle: p.data.actionTitle,
+    summary: p.data.summary,
+    protocol: p.data.protocol,
+    difficulty: p.data.difficulty,
+    runtime: p.data.runtime,
+    readTime: p.data.readTime,
+    tags: p.data.tags,
+  }));
+
+const postEntries = await getCollection('blog');
+const posts = postEntries
+  .sort((a, b) => b.data.date.valueOf() - a.data.date.valueOf())
+  .map((p) => ({
+    slug: p.id,
+    title: p.data.title,
+    summary: p.data.summary,
+    difficulty: p.data.difficulty,
+    readTime: p.data.readTime,
+  }));
+
+const base = import.meta.env.BASE_URL || '/';
+---
+
+<LayoutTerminal>
+  <Terminal client:load projects={projects} posts={posts} baseUrl={base} />
+</LayoutTerminal>

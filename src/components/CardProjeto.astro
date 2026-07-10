@@ -1,0 +1,58 @@
+---
+interface Props {
+  actionTitle: string;
+  summary: string;
+  protocol: string;
+  difficulty: 'Beginner' | 'Intermediate' | 'Advanced' | 'Professional';
+  runtime: string[];
+  readTime: string;
+  href?: string;
+}
+
+const { actionTitle, summary, protocol, difficulty, runtime, readTime, href } = Astro.props;
+
+const difficultyStyles: Record<string, string> = {
+  Beginner: 'bg-rh-accent-soft text-rh-accent',
+  Intermediate: 'bg-amber-100 text-amber-800',
+  Advanced: 'bg-orange-100 text-orange-800',
+  Professional: 'bg-red-100 text-rh-professional',
+};
+
+const Tag = href ? 'a' : 'div';
+---
+
+<Tag
+  href={href}
+  class="group flex flex-col gap-3 rounded-lg border border-rh-border bg-rh-surface p-5 transition-shadow hover:shadow-md"
+>
+  <!-- 1. Tag combinada de Protocolo/Dificuldade -->
+  <div class="flex items-center justify-between gap-2">
+    <span class="font-mono-code text-xs uppercase tracking-wide text-rh-muted">{protocol}</span>
+    <span class={`rounded-full px-2.5 py-0.5 text-xs font-medium ${difficultyStyles[difficulty]}`}>
+      {difficulty}
+    </span>
+  </div>
+
+  <!-- 2. Título de ação claro -->
+  <h3 class="text-lg font-semibold leading-snug text-rh-text group-hover:text-rh-accent">
+    {actionTitle}
+  </h3>
+
+  <!-- 3. Resumo de contexto -->
+  <p class="text-sm leading-relaxed text-rh-muted">{summary}</p>
+
+  <div class="mt-auto flex items-center justify-between pt-2">
+    <!-- 4. Selo do ambiente de execução -->
+    <div class="flex flex-wrap gap-1.5">
+      {
+        runtime.map((tech) => (
+          <span class="rounded border border-rh-border bg-rh-bg px-2 py-0.5 font-mono-code text-[11px] text-rh-muted">
+            {tech}
+          </span>
+        ))
+      }
+    </div>
+    <!-- 5. Estimativa de tempo -->
+    <span class="whitespace-nowrap text-xs text-rh-muted">{readTime}</span>
+  </div>
+</Tag>

@@ -1,0 +1,73 @@
+---
+import '../styles/global.css';
+import { SITE, SEO_DEFAULTS } from '../config';
+
+interface Props {
+  title?: string;
+  description?: string;
+}
+
+const { title = SEO_DEFAULTS.defaultTitle, description = SITE.description } = Astro.props;
+
+const canonicalURL = new URL(Astro.url.pathname, Astro.site);
+
+const personSchema = {
+  '@context': 'https://schema.org',
+  '@type': 'Person',
+  name: SITE.name,
+  jobTitle: SITE.role,
+  description: SITE.description,
+  email: `mailto:${SITE.email}`,
+  address: {
+    '@type': 'PostalAddress',
+    addressLocality: 'Vitória da Conquista',
+    addressRegion: 'Bahia',
+    addressCountry: 'BR',
+  },
+  sameAs: [SITE.linkedin, SITE.github],
+};
+---
+
+<!doctype html>
+<html lang={SITE.lang}>
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
+    <link rel="canonical" href={canonicalURL} />
+    <meta name="generator" content={Astro.generator} />
+
+    <title>{title}</title>
+    <meta name="description" content={description} />
+    <meta name="author" content={SITE.name} />
+
+    <!-- Open Graph -->
+    <meta property="og:type" content="website" />
+    <meta property="og:url" content={canonicalURL} />
+    <meta property="og:title" content={title} />
+    <meta property="og:description" content={description} />
+    <meta property="og:locale" content="pt_BR" />
+
+    <!-- Twitter Card -->
+    <meta name="twitter:card" content="summary_large_image" />
+    <meta name="twitter:title" content={title} />
+    <meta name="twitter:description" content={description} />
+
+    <!-- JSON-LD: Person -->
+    <script type="application/ld+json" is:inline set:html={JSON.stringify(personSchema)} />
+  </head>
+  <body class="bg-rh-bg text-rh-text font-sans antialiased selection:bg-rh-accent-soft selection:text-rh-accent">
+    <slot />
+  </body>
+</html>
+
+<style>
+  body {
+    font-family:
+      system-ui,
+      -apple-system,
+      'Segoe UI',
+      Roboto,
+      sans-serif;
+  }
+</style>

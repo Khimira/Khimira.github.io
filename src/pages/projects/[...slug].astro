@@ -1,0 +1,45 @@
+---
+import { getCollection, render } from 'astro:content';
+import LayoutRH from '../../layouts/LayoutRH.astro';
+
+export async function getStaticPaths() {
+  const projects = await getCollection('projects');
+  return projects.map((project) => ({
+    params: { slug: project.id },
+    props: { project },
+  }));
+}
+
+const { project } = Astro.props;
+const { Content } = await render(project);
+---
+
+<LayoutRH title={`${project.data.actionTitle} — Lucas Carvalho`} description={project.data.summary}>
+  <div class="mx-auto max-w-3xl px-4 py-16 md:px-8">
+    <a href="/#projetos" class="text-sm text-rh-accent hover:underline">← voltar aos projetos</a>
+
+    <div class="mt-4 flex items-center gap-3">
+      <span class="font-mono-code text-xs uppercase tracking-wide text-rh-muted">{project.data.protocol}</span>
+      <span class="rounded-full bg-rh-accent-soft px-2.5 py-0.5 text-xs font-medium text-rh-accent">
+        {project.data.difficulty}
+      </span>
+    </div>
+
+    <h1 class="mt-3 text-3xl font-bold text-rh-text">{project.data.actionTitle}</h1>
+    <p class="mt-2 text-rh-muted">{project.data.summary}</p>
+
+    <div class="mt-4 flex flex-wrap items-center gap-2 text-xs text-rh-muted">
+      <span>{project.data.readTime} de leitura</span>
+      <span>·</span>
+      <div class="flex gap-1.5">
+        {project.data.runtime.map((tech: string) => (
+          <span class="rounded border border-rh-border bg-rh-bg px-2 py-0.5 font-mono-code">{tech}</span>
+        ))}
+      </div>
+    </div>
+
+    <article class="prose prose-neutral mt-10 max-w-none prose-headings:font-semibold prose-a:text-rh-accent">
+      <Content />
+    </article>
+  </div>
+</LayoutRH>

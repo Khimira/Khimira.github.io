@@ -1,0 +1,158 @@
+@import "tailwindcss";
+@plugin "@tailwindcss/typography";
+
+/* Fontes hospedadas localmente via @fontsource (sem dependência de CDN externo) */
+@import "@fontsource/vt323";
+@import "@fontsource/share-tech-mono";
+@import "@fontsource/fira-code";
+
+/* -------------------------------------------------------------------------
+   Tokens de Design — Tailwind v4 (CSS-first theme)
+   -------------------------------------------------------------------------
+   Duas paletas convivem no mesmo arquivo:
+   1. RH (--rh-*)        -> clean, alto contraste, otimizada para leitura.
+   2. Terminal (--rp-*)  -> Rosé Pine Moon fundida com o prompt do Kali
+                             Linux (verde fósforo + acentos vermelho/azul).
+   ------------------------------------------------------------------------- */
+@theme {
+  --font-display: "VT323", monospace;
+  --font-mono-term: "Share Tech Mono", "Fira Code", monospace;
+  --font-mono-code: "Fira Code", "Share Tech Mono", monospace;
+
+  /* Modo RH — claro, neutro, profissional */
+  --color-rh-bg: #fbfaf8;
+  --color-rh-surface: #ffffff;
+  --color-rh-border: #e5e1db;
+  --color-rh-text: #1c1b1a;
+  --color-rh-muted: #6b6660;
+  --color-rh-accent: #2a6f5e;
+  --color-rh-accent-soft: #e6f2ee;
+  --color-rh-professional: #b23a48;
+
+  /* Modo Terminal — Rosé Pine Moon x Kali */
+  --color-rp-base: #232136;
+  --color-rp-surface: #2a273f;
+  --color-rp-overlay: #393552;
+  --color-rp-muted: #6e6a86;
+  --color-rp-subtle: #908caa;
+  --color-rp-text: #e0def4;
+  --color-rp-love: #eb6f92;
+  --color-rp-gold: #f6c177;
+  --color-rp-rose: #ea9a97;
+  --color-rp-pine: #3e8fb0;
+  --color-rp-foam: #9ccfd8;
+  --color-rp-iris: #c4a7e7;
+  --color-rp-kali-green: #10b981;
+  --color-rp-kali-green-bright: #4ade80;
+
+  --animate-flicker: flicker 0.15s infinite;
+  --animate-refresh: refresh 8s linear infinite;
+  --animate-blink: blink 1s step-end infinite;
+  --animate-glitch: glitch 0.2s infinite;
+}
+
+@keyframes flicker {
+  0% { opacity: 0.28; }
+  5% { opacity: 0.35; }
+  10% { opacity: 0.24; }
+  15% { opacity: 0.9; }
+  20% { opacity: 0.18; }
+  25% { opacity: 0.26; }
+  30% { opacity: 0.22; }
+  100% { opacity: 0.24; }
+}
+
+@keyframes refresh {
+  0% { bottom: 100%; }
+  70% { bottom: 100%; }
+  100% { bottom: 0px; }
+}
+
+@keyframes blink {
+  0%, 100% { opacity: 1; }
+  50% { opacity: 0; }
+}
+
+@keyframes glitch {
+  0% { transform: translate(0); }
+  20% { transform: translate(-2px, 2px); }
+  40% { transform: translate(-2px, -2px); }
+  60% { transform: translate(2px, 2px); }
+  80% { transform: translate(2px, -2px); }
+  100% { transform: translate(0); }
+}
+
+/* -------------------------------------------------------------------------
+   Camadas de Estilização CRT (fiéis à especificação original)
+   ------------------------------------------------------------------------- */
+.crt-screen::before {
+  content: " ";
+  display: block;
+  position: fixed;
+  top: 0;
+  left: 0;
+  bottom: 0;
+  right: 0;
+  background:
+    linear-gradient(rgba(18, 16, 16, 0) 50%, rgba(0, 0, 0, 0.25) 50%),
+    linear-gradient(90deg, rgba(255, 0, 0, 0.06), rgba(0, 255, 0, 0.02), rgba(0, 0, 255, 0.06));
+  z-index: 999;
+  background-size: 100% 2px, 3px 100%;
+  pointer-events: none;
+}
+
+.crt-flicker::after {
+  content: " ";
+  display: block;
+  position: fixed;
+  top: 0;
+  left: 0;
+  bottom: 0;
+  right: 0;
+  background: rgba(18, 16, 16, 0.1);
+  opacity: 0;
+  z-index: 1000;
+  pointer-events: none;
+  animation: flicker 0.15s infinite;
+}
+
+.crt-sweep {
+  float: left;
+  width: 200%;
+  height: 100px;
+  z-index: 1001;
+  background: linear-gradient(
+    0deg,
+    rgba(0, 0, 0, 0) 0%,
+    rgba(16, 185, 129, 0.15) 10%,
+    rgba(0, 0, 0, 0.05) 100%
+  );
+  opacity: 0.2;
+  position: fixed;
+  bottom: 0;
+  animation: refresh 8s linear infinite;
+  pointer-events: none;
+}
+
+/* Quando o usuário desativa o flicker/CRT por acessibilidade */
+.crt-disabled .crt-screen::before,
+.crt-disabled .crt-flicker::after,
+.crt-disabled .crt-sweep {
+  display: none !important;
+  animation: none !important;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .crt-flicker::after,
+  .crt-sweep {
+    animation: none !important;
+  }
+}
+
+html {
+  scroll-behavior: smooth;
+}
+
+body.terminal-active {
+  overflow: hidden;
+}

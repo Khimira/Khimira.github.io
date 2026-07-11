@@ -28,9 +28,25 @@ const posts = postEntries
     readTime: p.data.readTime,
   }));
 
+const writeupEntries = await getCollection('writeups');
+const writeups = writeupEntries
+  .sort((a, b) => b.data.date.valueOf() - a.data.date.valueOf())
+  .map((w) => ({
+    slug: w.id,
+    title: w.data.title,
+    ctf: w.data.ctf,
+    category: w.data.category,
+    summary: w.data.summary,
+    difficulty: w.data.difficulty,
+    points: w.data.points,
+    solved: w.data.solved,
+    readTime: w.data.readTime,
+    tags: w.data.tags,
+  }));
+
 const base = import.meta.env.BASE_URL || '/';
 ---
 
 <LayoutTerminal>
-  <Terminal client:load projects={projects} posts={posts} baseUrl={base} />
+  <Terminal client:load projects={projects} posts={posts} writeups={writeups} baseUrl={base} />
 </LayoutTerminal>

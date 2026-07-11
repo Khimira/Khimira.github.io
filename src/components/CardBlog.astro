@@ -1,0 +1,47 @@
+---
+interface Props {
+  title: string;
+  summary: string;
+  difficulty: 'Beginner' | 'Intermediate' | 'Advanced' | 'Critical';
+  readTime: string;
+  tags: string[];
+  href?: string;
+}
+
+const { title, summary, difficulty, readTime, tags, href } = Astro.props;
+
+const difficultyStyles: Record<string, string> = {
+  Beginner: 'bg-rh-accent-soft text-rh-accent',
+  Intermediate: 'bg-amber-100 text-amber-800',
+  Advanced: 'bg-orange-100 text-orange-800',
+  Critical: 'bg-red-100 text-rh-professional',
+};
+
+const Tag = href ? 'a' : 'div';
+---
+
+<Tag
+  href={href}
+  class="group flex flex-col gap-3 rounded-lg border border-rh-border bg-rh-surface p-5 transition-shadow hover:shadow-md"
+>
+  <div class="flex items-center justify-between gap-2">
+    <span class={`rounded-full px-2.5 py-0.5 text-xs font-medium ${difficultyStyles[difficulty]}`}>
+      {difficulty}
+    </span>
+    <span class="whitespace-nowrap text-xs text-rh-muted">{readTime}</span>
+  </div>
+
+  <h3 class="text-lg font-semibold leading-snug text-rh-text group-hover:text-rh-accent">
+    {title}
+  </h3>
+
+  <p class="text-sm leading-relaxed text-rh-muted">{summary}</p>
+
+  <div class="mt-auto flex flex-wrap gap-1.5 pt-2">
+    {tags.map((tag) => (
+      <span class="rounded border border-rh-border bg-rh-bg px-2 py-0.5 font-mono-code text-[11px] text-rh-muted">
+        {tag}
+      </span>
+    ))}
+  </div>
+</Tag>

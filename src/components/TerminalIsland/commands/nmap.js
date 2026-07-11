@@ -1,9 +1,9 @@
 export const description = 'Simula um scan de portas lógicas do portfólio.';
 
 const PORTS = [
-  { port: '22/ssh-terminal', state: ' open  ', service: 'modo-terminal-ssh' },
-  { port: '80/http-website', state: ' open  ', service: 'modo-website-http' },
-  { port: '443/https-website ', state:'open', service: 'modo-website-tls'  },
+  { port: '22/ssh-terminal', state: 'open', service: 'modo-terminal-ssh' },
+  { port: '80/http-website', state: 'open', service: 'modo-website-http' },
+  { port: '443/https-website', state: 'open', service: 'modo-website-tls' },
   { port: '31337/elite', state: 'closed', service: 'reservado' },
 ];
 

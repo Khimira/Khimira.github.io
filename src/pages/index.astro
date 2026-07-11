@@ -1,6 +1,8 @@
 ---
 import LayoutRH from '../layouts/LayoutRH.astro';
 import CardProjeto from '../components/CardProjeto.astro';
+import CardBlog from '../components/CardBlog.astro';
+import CardWriteup from '../components/CardWriteup.astro';
 import SwitchTerminal from '../components/SwitchTerminal.astro';
 import { SITE, ABOUT, NAV_LINKS } from '../config';
 import { getCollection } from 'astro:content';
@@ -8,22 +10,29 @@ import { getCollection } from 'astro:content';
 const allProjects = await getCollection('projects');
 const projects = allProjects
   .sort((a, b) => b.data.date.valueOf() - a.data.date.valueOf());
+
+const allPosts = await getCollection('blog');
+const posts = allPosts
+  .sort((a, b) => b.data.date.valueOf() - a.data.date.valueOf());
+
+const allWriteups = await getCollection('writeups');
+const writeups = allWriteups
+  .sort((a, b) => b.data.date.valueOf() - a.data.date.valueOf());
 ---
 
 <LayoutRH>
   <header class="sticky top-0 z-50 border-b border-rh-border bg-rh-bg/90 backdrop-blur">
-    <div class="mx-auto flex max-w-5xl items-center justify-between px-4 py-4 md:px-8">
-      <a href="#top" class="font-mono-code text-sm font-semibold text-rh-text">
+    <div class="mx-auto flex max-w-5xl flex-wrap items-center justify-between gap-x-6 gap-y-2 px-4 py-4 md:px-8">
+      <a href="#top" class="shrink-0 font-mono-code text-sm font-semibold text-rh-text">
         {SITE.name} <span class="text-rh-muted">/ {SITE.role}</span>
       </a>
-      <nav class="hidden items-center gap-6 md:flex">
+      <nav class="hidden items-center gap-5 md:flex md:gap-6">
         {NAV_LINKS.map((link) => (
-          <a href={link.href} class="text-sm text-rh-muted transition-colors hover:text-rh-accent">
+          <a href={link.href} class="whitespace-nowrap text-sm text-rh-muted transition-colors hover:text-rh-accent">
             {link.label}
           </a>
         ))}
       </nav>
-      <SwitchTerminal targetHref="terminal" />
     </div>
   </header>
 
@@ -148,6 +157,57 @@ const projects = allProjects
       </div>
     </section>
 
+    <!-- BLOG -->
+    <section id="blog" class="mx-auto max-w-5xl px-4 py-16 md:px-8">
+      <div class="flex items-baseline justify-between">
+        <h2 class="text-2xl font-bold text-rh-text">Blog</h2>
+      </div>
+      {posts.length > 0 ? (
+        <div class="mt-6 grid gap-5 md:grid-cols-2 lg:grid-cols-3">
+          {posts.map((post) => (
+            <CardBlog
+              title={post.data.title}
+              summary={post.data.summary}
+              difficulty={post.data.difficulty}
+              readTime={post.data.readTime}
+              tags={post.data.tags}
+              href={`/blog/${post.id}/`}
+            />
+          ))}
+        </div>
+      ) : (
+        <p class="mt-6 text-sm text-rh-muted">Em breve.</p>
+      )}
+    </section>
+
+    <!-- WRITE-UPS -->
+    <section id="writeups" class="border-t border-rh-border bg-rh-surface">
+      <div class="mx-auto max-w-5xl px-4 py-16 md:px-8">
+        <div class="flex items-baseline justify-between">
+          <h2 class="text-2xl font-bold text-rh-text">Write-ups</h2>
+        </div>
+        {writeups.length > 0 ? (
+          <div class="mt-6 grid gap-5 md:grid-cols-2 lg:grid-cols-3">
+            {writeups.map((writeup) => (
+              <CardWriteup
+                title={writeup.data.title}
+                ctf={writeup.data.ctf}
+                category={writeup.data.category}
+                summary={writeup.data.summary}
+                difficulty={writeup.data.difficulty}
+                points={writeup.data.points}
+                solved={writeup.data.solved}
+                readTime={writeup.data.readTime}
+                href={`/writeups/${writeup.id}/`}
+              />
+            ))}
+          </div>
+        ) : (
+          <p class="mt-6 text-sm text-rh-muted">Em breve.</p>
+        )}
+      </div>
+    </section>
+
     <!-- CONTATO -->
     <section id="contato" class="mx-auto max-w-5xl px-4 py-16 md:px-8">
       <h2 class="text-2xl font-bold text-rh-text">Contato</h2>
@@ -159,16 +219,28 @@ const projects = allProjects
         <span class="text-rh-muted">{SITE.location}</span>
       </div>
     </section>
+
+    <!-- CHAMADA PARA O MODO TERMINAL -->
+    <section class="border-t border-rh-border bg-rh-surface py-16 text-center">
+      <div class="mx-auto max-w-2xl px-4 md:px-8">
+        <p class="font-mono-code text-xs uppercase tracking-widest text-rh-muted">
+          prefere a experiência técnica?
+        </p>
+        <h2 class="mt-2 text-xl font-semibold text-rh-text">
+          Explore o mesmo portfólio no Modo Terminal
+        </h2>
+        <p class="mt-2 text-sm text-rh-muted">
+          Boot falso, comandos interativos e alguns easter eggs pra quem gosta de linha de comando.
+        </p>
+        <div class="mt-6 flex justify-center">
+          <SwitchTerminal targetHref="terminal" />
+        </div>
+      </div>
+    </section>
   </main>
 
   <footer class="border-t border-rh-border py-8 text-center text-xs text-rh-muted">
-    <p>© {new Date().getFullYear()} {SITE.name}. Construído com Astro.js — 0kb JS por padrão.</p>
-    <button
-      id="footer-terminal-hint"
-      type="button"
-      class="mt-2 font-mono-code text-rh-muted underline decoration-dotted hover:text-rh-accent"
-    >
-      psst, tem um terminal escondido no header ↑
-    </button>
+    <p>© {new Date().getFullYear()} {SITE.name}. Construído com Astro.js</p>
   </footer>
+</LayoutRH>
 </LayoutRH>

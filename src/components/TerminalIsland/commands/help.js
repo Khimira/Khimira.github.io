@@ -4,10 +4,10 @@ export const COMMAND_LIST = [
   { cmd: 'about', desc: 'Perfil, formação e resumo técnico' },
   { cmd: 'projects [tag]', desc: 'Lista projetos (filtro opcional por tag)' },
   { cmd: 'blog', desc: 'Lista notas técnicas / SecOps' },
+  { cmd: 'writeups [termo]', desc: 'Lista write-ups de CTF/labs (filtro opcional)' },
   { cmd: 'contact', desc: 'Informações de contato' },
   { cmd: 'nmap | scan', desc: 'Simula um scan de portas do portfólio' },
   { cmd: 'themes <nome>', desc: 'Troca a paleta de cores do terminal' },
-  { cmd: 'matrix', desc: 'Chuva de caracteres estilo Matrix' },
   { cmd: 'clear', desc: 'Limpa a tela' },
   { cmd: 'exit', desc: 'Retorna ao Modo Website' },
 ];

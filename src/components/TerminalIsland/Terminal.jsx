@@ -12,11 +12,12 @@ const COMMAND_MODULES = {
   scan: () => import('./commands/nmap.js'),
   projects: () => import('./commands/projects.js'),
   blog: () => import('./commands/blog.js'),
+  writeups: () => import('./commands/writeups.js'),
+  ctf: () => import('./commands/writeups.js'),
   matrix: () => import('./commands/matrix.js'),
   themes: () => import('./commands/themes.js'),
   theme: () => import('./commands/themes.js'),
   contact: () => import('./commands/contact.js'),
-  help: () => import('./commands/help.js'),
   help: () => import('./commands/help.js'),
 };
 
@@ -39,10 +40,11 @@ const nextId = () => idCounter++;
  * @param {{
  *   projects?: Array<Record<string, any>>,
  *   posts?: Array<Record<string, any>>,
+ *   writeups?: Array<Record<string, any>>,
  *   baseUrl?: string,
  * }} props
  */
-export default function Terminal({ projects = [], posts = [], baseUrl = '/' }) {
+export default function Terminal({ projects = [], posts = [], writeups = [], baseUrl = '/' }) {
   const [lines, setLines] = useState([]);
   const [booted, setBooted] = useState(false);
   const [busy, setBusy] = useState(true);
@@ -106,8 +108,18 @@ export default function Terminal({ projects = [], posts = [], baseUrl = '/' }) {
   const stopMatrix = useCallback(() => setMatrixActive(false), []);
 
   const buildCtx = useCallback(
-    () => ({ print, wait, projects, posts, setTheme, exitTerminal, triggerKernelPanic, startMatrix }),
-    [print, wait, projects, posts, setTheme, exitTerminal, triggerKernelPanic, startMatrix],
+    () => ({
+      print,
+      wait,
+      projects,
+      posts,
+      writeups,
+      setTheme,
+      exitTerminal,
+      triggerKernelPanic,
+      startMatrix,
+    }),
+    [print, wait, projects, posts, writeups, setTheme, exitTerminal, triggerKernelPanic, startMatrix],
   );
 
   // Boot sequence

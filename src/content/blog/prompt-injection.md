@@ -6,7 +6,7 @@ summary: >
   quais camadas de defesa realmente ajudam.
 date: 2026-06-09
 tags: ["ia", "secops", "llm", "prompt-injection"]
-difficulty: "Advanced"
+difficulty: "Intermediate"
 readTime: "7 min"
 ---
 

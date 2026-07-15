@@ -7,7 +7,7 @@ summary: >
 difficulty: "Intermediate"
 points: 200
 solved: true
-readTime: "16 min"
+readTime: "10 min"
 date: 2026-07-15
 tags: ["cryptography", "reverse-engineering", "ctf"]
 featured: false
@@ -25,7 +25,7 @@ Na criptografia RSA, *n*, o módulo, é o resultado da multiplicação de dois n
 
 ### O Programa
 
-Após fazer o reconhecimento inicial da mensagem, decidi por analisar o código que a gerava, para minha surpresa, o script estava comentado, primeiro, analisei quais pacotes estavam sendo importados.
+Após fazer o reconhecimento inicial da mensagem, decidi por analisar o código que a gerava, para minha surpresa, o script estava comentado, primeiro analisei quais pacotes estavam sendo importados.
 
 ```python
 
@@ -41,7 +41,7 @@ O script importava os módulos *getPrime*, *inverse* e *bytes_to_long* do pacote
   - ***getPrime***: Este módulo serve para gerar números primos aleatórios e criptograficamente seguros (utilizando de uma fonte de entropia do sistema) com um número específico de bits.
   - ***inverse***: O módulo *inverse* serve para calcular o inverso multiplicativo modular de um número, sendo amplamente utilizado em algoritmos de criptografia de chave pública (como o RSA, minha primeira suposição), sendo utilizada para calcular a chave privada a partir de uma chave pública e do totiente de Euler (processo chamado de inverso modular).
   - ***bytes_to_long***: Esta função serve para converter uma sequência de bytes (texto ou dados binários) em um número inteiro grande.
-- ***random***: Este pacote serve para gerar números **pseudoaleatórios** e executar ações baseadas no acaso ou probabilidade, sendo essencial para simulações estatísticas e senhas aleatórias.
+- **random**: Este pacote serve para gerar números **pseudoaleatórios** e executar ações baseadas no acaso ou probabilidade, sendo essencial para simulações estatísticas e senhas aleatórias.
 
 Após a análise dos pacotes importados, segui para a leitura do código.
 
@@ -55,7 +55,7 @@ phi = (p - 1) * (q - 1)
 
 ```
 
-Como explicitado pelo comentário, as primeiras duas linhas geram os númmeros primos aleatórios com 1048 bits cada, logo depois, na terceira e quarta linha, esses números primos são utilizados para gerar o módulo (chamado de *n*), e *phi*, uma variável que será utilizada na função *inverse* no bloco seguinte.
+Como explicitado pelo comentário, as primeiras duas linhas geram os números primos aleatórios com 1048 bits cada, logo depois, na terceira e quarta linha, esses números primos são utilizados para gerar o módulo (chamado de *n*), e *phi*, uma variável que será utilizada na função *inverse* no bloco seguinte.
 
 ```python
 
@@ -102,7 +102,7 @@ O ataque funciona calculando as frações contínuas da razão entre o expoente 
 
 ## Exploração
 
-Após entneder a vulnerabilidade do desafio, abri minha IDE de Python para escrever o programa que descriptografou a mensagem, comecei pelo básico, importei os pacotes necessários:
+Após entender a vulnerabilidade do desafio, abri minha IDE de Python para escrever o programa que descriptografou a mensagem, comecei pelo básico, importei os pacotes necessários:
 
 ```python
 
@@ -155,6 +155,6 @@ else:
 
 ## A Flag
 
-Com a flag capturada, enviei para a CyLab e recebi meus 200 pontos, aprendi e me diverti bastante com este CTF, mas a lição que fica é, ao lidar com criptografia, sempre confira quais ataques funcionam para aquele tipo de encriptação e como mitigar eles, caso a senha privada *d* não fosse tão pequena, o ataque de Wiener não funcionaria e a mensagem estaria para sempre apenas com quem a escreveu.
+Com a flag capturada, enviei para a CyLab e recebi meus 200 pontos, aprendi e me diverti bastante com este CTF, mas a lição que fica é, ao lidar com criptografia, sempre confira quais ataques funcionam para aquele tipo de encriptação e como mitigá-los, caso a senha privada *d* não fosse tão pequena, o ataque de Wiener não funcionaria e a mensagem estaria para sempre apenas com quem a escreveu e com seu destinatário.
 
 P.S.: Por razões éticas decidi por não publicar a flag, apenas os métodos de resolução, caso queira testar a solução, o desafio Small Trouble pode ser encontrado no site learn.cylabacademy.org na barra de pesquisa de desafios.
